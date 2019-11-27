@@ -33,8 +33,8 @@ module snake(
     output TRIGGER
     );
     
-    parameter maxX = 160;
-    parameter maxY = 120;
+    parameter maxX = 159;
+    parameter maxY = 119;
     parameter length = 30;
     parameter speed = 30000000;
     
