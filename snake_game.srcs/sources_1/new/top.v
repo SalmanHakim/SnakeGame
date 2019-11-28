@@ -34,7 +34,7 @@ module top(
     output [7:0] HEX_OUT
     );
     
-    wire score_trig;
+    wire score_trig, fail_trig;
     wire [1:0] msm_state; 
     wire [2:0] navi_state;
     wire [11:0] colour;
@@ -50,6 +50,7 @@ module top(
         .BTNR(BTNR),
         .BTNL(BTNL),
         .BTND(BTND),
+        .FAILED(fail_trig),
         .SCORE_IN(score),
         .STATE_OUT(msm_state)
         );
@@ -102,7 +103,8 @@ module top(
         .TARGET_IN(target_addr),
         .SCORE_IN(score),
         .COLOUR_OUT(colour),
-        .TRIGGER(score_trig)
+        .TRIGGER(score_trig),
+        .FAIL(fail_trig)
         );
     
 endmodule
