@@ -27,6 +27,7 @@ module MSM(
     input BTNR,
     input BTNL,
     input BTND,
+    input FAILED,
     input [3:0] SCORE_IN,
     output [1:0] STATE_OUT
     );
@@ -56,11 +57,16 @@ module MSM(
             2'b01   :   begin                       //play
                 if (SCORE_IN == 4'd10)
                     next_state <= 2'b10;
+                else if (FAILED)
+                    next_satte <= 2'b11;
                 else
                     next_state <= curr_state;
             end
             
             2'b10   :                               //win
+                next_state <= curr_state;
+                
+            2'b11   :                               //failed
                 next_state <= curr_state;
         endcase
     end
