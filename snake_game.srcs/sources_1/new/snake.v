@@ -30,12 +30,13 @@ module snake(
     input [14:0] TARGET_IN,
     input [3:0] SCORE_IN,
     output [11:0] COLOUR_OUT,
-    output TRIGGER
+    output TRIGGER,
+    output FAIL
     );
     
     parameter maxX = 159;
     parameter maxY = 119;
-    parameter length = 30;
+    parameter length = 31;
     parameter speed = 30000000;
     
     parameter RED = 12'b000000001111;
@@ -45,7 +46,8 @@ module snake(
     
     reg [7:0] Xsnake [0:length - 1];
     reg [7:0] Ysnake [0:length - 1];
-    reg trig;
+    reg trig, fail;
+    reg [5:0] limit;
     
     integer i, j, k;
     
@@ -130,7 +132,8 @@ module snake(
     
     always@(posedge CLK) begin                  //snake body
         snakebody = 0;
-        for(k = 1; k <= SCORE_IN; k = k + 1) begin
+        limit = SCORE_IN;
+        for(k = 1; k <= limit; k = k + 1) begin
             if (snakebody == 0)
                 snakebody = ((Xsnake[k] == (ADDX/4)) && (Ysnake[k] == (ADDY/4)));
         end 
@@ -140,11 +143,18 @@ module snake(
         food <= ((TARGET_IN[14:7] == (ADDX/4)) && (TARGET_IN[6:0] == (ADDY/4)));
     end
         
-    always@(posedge CLK) begin                  //collision trigger
-        if (((TARGET_IN[14:7]) == (Xsnake[0])) && ((TARGET_IN[6:0]) == (Ysnake[0])))
+    always@(posedge CLK) begin                  //good collision trigger
+        if (sankehead && food)
             trig = 1;
         else
             trig = 0;
+    end
+    
+    always@(posedge CLK) begin                  //bad collision trigger
+        if (sankehead && snakebody && (SCORE_IN > 0))
+            fail = 1;
+        else
+            fail = 0;
     end
     
     always@(posedge CLK) begin                  //colour set
@@ -163,5 +173,6 @@ module snake(
     
     assign COLOUR_OUT = colour;
     assign TRIGGER = trig;
+    assign FAIL = fail;
         
 endmodule
