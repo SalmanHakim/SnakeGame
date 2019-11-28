@@ -61,6 +61,9 @@ module colourControl(
                         colour <= frameCount[15:8] - addY[7:0] - addX[7:0] + 240 + 320;
                 end
             end
+            
+            2'b11   :                           //failed
+                colour <= 12'b000000001111;
         endcase
     end
     
